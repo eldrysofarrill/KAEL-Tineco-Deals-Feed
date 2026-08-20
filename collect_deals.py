@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import re
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -11,6 +12,25 @@ TOKEN_URL = "https://api.ebay.com/identity/v1/oauth2/token"
 SEARCH_URL = "https://api.ebay.com/buy/browse/v1/item_summary/search"
 MARKETPLACE = "EBAY_US"
 SELLER = "tinecous"
+
+MODEL_RULES = [
+    ("FLOOR ONE S5 COMBO", ["FLOOR ONE S5 COMBO", "S5 COMBO"]),
+    ("FLOOR ONE S3 PRO", ["FLOOR ONE S3 PRO", "S3 PRO"]),
+    ("FLOOR ONE STRETCH S6", ["FLOOR ONE STRETCH S6", "STRETCH S6"]),
+    ("FLOOR ONE S7", ["FLOOR ONE S7", " S7 "]),
+    ("FLOOR ONE S6", ["FLOOR ONE S6", " S6 "]),
+    ("FLOOR ONE S5", ["FLOOR ONE S5", " S5 "]),
+    ("FLOOR ONE S3", ["FLOOR ONE S3", " S3 "]),
+    ("iFLOOR 5", ["IFLOOR 5"]),
+    ("iFLOOR 3", ["IFLOOR 3"]),
+    ("iFLOOR 2", ["IFLOOR 2"]),
+    ("iFLOOR", ["IFLOOR"]),
+    ("GO XL 503", ["GO XL 503", "XL 503"]),
+]
+
+KNOWN_CODES = {
+    "FW051800US": "FLOOR ONE S3 PRO",
+}
 
 
 def get_token():
@@ -53,39 +73,57 @@ def fetch_items(token):
 
 def money_value(obj):
     if not obj:
-        return None
+        return 0.0
     try:
-        return float(obj.get("value"))
+        return float(obj.get("value") or 0)
     except Exception:
-        return None
+        return 0.0
+
+
+def detect_code(title):
+    m = re.search(r"\b([A-Z]{2,4}\d{4,}[A-Z]{0,3})\b", title.upper())
+    return m.group(1) if m else ""
+
+
+def detect_model(title, code):
+    if code in KNOWN_CODES:
+        return KNOWN_CODES[code]
+    hay = " " + title.upper().replace("-", " ") + " "
+    for model, needles in MODEL_RULES:
+        if any(n in hay for n in needles):
+            return model
+    return "TINECO"
 
 
 def simplify(item):
+    title = item.get("title") or "Tineco"
+    code = detect_code(title)
+    model = detect_model(title, code)
     price = money_value(item.get("price"))
     marketing = item.get("marketingPrice") or {}
     original = money_value(marketing.get("originalPrice"))
     discount_pct = marketing.get("discountPercentage")
     try:
-        discount_pct = float(discount_pct) if discount_pct is not None else None
+        discount_pct = float(discount_pct) if discount_pct is not None else 0.0
     except Exception:
-        discount_pct = None
+        discount_pct = 0.0
 
     seller = item.get("seller") or {}
-    image = (item.get("image") or {}).get("imageUrl")
     return {
-        "item_id": item.get("itemId"),
-        "title": item.get("title"),
+        "itemId": item.get("itemId") or "",
+        "title": title,
+        "model": model,
+        "modelCode": code,
         "price": price,
         "currency": (item.get("price") or {}).get("currency", "USD"),
-        "original_price": original,
-        "discount_percent": discount_pct,
-        "condition": item.get("condition"),
-        "condition_id": item.get("conditionId"),
-        "seller": seller.get("username"),
-        "seller_feedback_percent": seller.get("feedbackPercentage"),
-        "item_url": item.get("itemWebUrl"),
-        "image_url": image,
-        "buying_options": item.get("buyingOptions", []),
+        "originalPrice": original,
+        "discountPercent": discount_pct,
+        "condition": item.get("condition") or "Refurbished",
+        "conditionId": item.get("conditionId") or "",
+        "seller": seller.get("username") or SELLER,
+        "sellerFeedbackPercent": seller.get("feedbackPercentage"),
+        "url": item.get("itemWebUrl") or "https://www.ebay.com/str/tinecoofficialshop",
+        "imageUrl": (item.get("image") or {}).get("imageUrl") or "",
     }
 
 
@@ -94,10 +132,11 @@ def main():
     raw = fetch_items(token)
     items = [simplify(x) for x in raw]
     items = [x for x in items if x.get("seller", "").lower() == SELLER]
-    items.sort(key=lambda x: (x["price"] is None, x["price"] if x["price"] is not None else 10**9))
+    items.sort(key=lambda x: (x["price"] <= 0, x["price"] if x["price"] > 0 else 10**9))
 
     out = {
-        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "status": "ok",
+        "updatedAt": datetime.now(timezone.utc).isoformat(),
         "source": "eBay Browse API",
         "marketplace": MARKETPLACE,
         "seller": SELLER,
