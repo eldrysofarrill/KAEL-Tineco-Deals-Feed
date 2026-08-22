@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "updatedAt": "2026-08-22T05:49:13.481247+00:00",
+  "updatedAt": "2026-08-22T06:17:32.557352+00:00",
   "source": "eBay Browse API",
   "marketplace": "EBAY_US",
   "seller": "tinecous",
@@ -52,7 +52,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318608628020?_skw=Tineco+refurbished&hash=item4a2e8dd934:g:MOUAAeSwaQdpeatY&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGb8Ws2GJPgKf3E%2F2viCR63Yt3PuCCTM%2B1dz4dHufyuWfr4zFbaF59adeEvx5ktJsl4CLKPUIC%2FFFAsNB2Y%2FDaq6ElXXLw2Vk6FTuOwxEzVIJ1i1pPQImOZlUU1SzjuMX4wckItOkJGwta5BwuFJHYtnZfJJ3KnahQa7WtnttTa6RNOxq095CuUBQtg%2BPO2GuNOvbHWUlc4whIxLKXukOcM6wO7IG7rq7Ej6qgIJbty35z2IIxFlVAciEddIXmkQeQvB3PahCORnP7QoBj2MVWGz9WLxUh5FVLz81zpwOdxfpg%3D%3D",
+      "url": "https://www.ebay.com/itm/318608628020?_skw=Tineco+refurbished&hash=item4a2e8dd934:g:MOUAAeSwaQdpeatY",
       "imageUrl": "https://i.ebayimg.com/images/g/MOUAAeSwaQdpeatY/s-l225.jpg"
     },
     {
@@ -132,7 +132,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318011596698?_skw=Tineco+refurbished&hash=item4a0af7df9a:g:vbcAAeSw9vJpt5oG",
+      "url": "https://www.ebay.com/itm/318011596698?_skw=Tineco+refurbished&hash=item4a0af7df9a:g:vbcAAeSw9vJpt5oG&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGb97JL8SilGAxx8oPf1jmyGuOhLWefO0812ulpRk71k2tW2d3K27GBrnPIlEX%2BYZjd3EdJ7u6rbi4Ji7UldNnGY7sF8fpMCzHsVo0eoKipNVdWSsLrgWpY6aZ575AECcr8KARVbOGgAd9M9kj1nCVzKM6qYcrF1IYdvH4%2Bz7zajeCOCJlohp6A4IiMSd11RTZ2O42992i6NsH48TVNOvSdJj4Xv7ZiViMJSsgap8iWQ6GqLGXqwjDb0hiPI--NmeUestujFja%2FtXw7cdBvvep4npoJh5U614qsF8MyIu792iQ%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/vbcAAeSw9vJpt5oG/s-l225.jpg"
     },
     {
@@ -148,7 +148,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318608635457?_skw=Tineco+refurbished&hash=item4a2e8df641:g:AMIAAeSwa5xp-~sI&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGa48tZuVSd5oX8pJJpQm6PnBDfHXwoQjBPNDnzn1j48HnSiZ69HN9ggM1zbnG5aKTDvYrElOfHQq4CQDLeZ7p%2FJCJS201I%2BZUoRtuGcfNGSyW14%2F3u57Uv9P3mv12wMDf15AlBikuDGYi0GDFLVIc1UBMyz0UcjpujIrX4gjUpNwhB8wHLuuvzjAW028%2Be%2BhuJeo2xS6%2FvvO6P7WX7H1ngnsBrnZX38IeqLmMDFTdAuwUtvFY%2B7gHQIC46NQeCaWxXbYa%2B4avhe5mXNidWcAN7FhlOazV19o%2FmFW7OubMeb6w%3D%3D",
+      "url": "https://www.ebay.com/itm/318608635457?_skw=Tineco+refurbished&hash=item4a2e8df641:g:AMIAAeSwa5xp-~sI&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGa48tZuVSd5oX8pJJpQm6PnBDfHXwoQjBPNDnzn1j48HnSiZ69HN9ggM1zbnG5aKTDvYrElOfHQq4CQDLeZ7p%2FJCJS201I%2BZUoRtuGcfNGSyW14%2F3u57Uv9P3mv12wMDf2CewlI3A%2Fw2EsfMDmwEvBcKPteGyCaO8F%2BG7Dwl59c1Szdgusw8cxUNON6Z%2FayCoeFaACgw9S6Fvvq8XvsZh9PoK7MNUSUQiVCYhhRVvw%2FFX1hyIKxMRBwjVz5Qo2mk4srn3hyw5z6Gp73npJ3aJUuth8umToHx%2Bg6w8Q9VIQdCw%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/AMIAAeSwa5xp-~sI/s-l225.jpg"
     },
     {
@@ -180,7 +180,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/317858455654?_skw=Tineco+refurbished&hash=item4a01d72066:g:KPgAAeSwTgppiYK0&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGaj1giRXot3Vu6apxaavZDpM7rSRykQ7NDWvQsVYKwceoFRQccPJ5KCJkYl66rgYoB7njd1OujjflnEx0F%2BZS1cA1VweFLLgjSpVLyN81NGDGY4VMfuXHGm%2BEviSCSleh2PAAkVkzSSX6ALjIRxtN407ur10LDSEQCNTp1%2FmjUvRuEXufWyFgaswwbm7e2JUxcjm3%2B6%2BSRnHKERNWjhQO0mKc8va%2B%2FR81OWVggtrDQb8wB7bUtl8SCPEU8ixuJO3eYjblipkmJnyV6J4x7WGWXVRj89JMgKkfIVAAawesb%2Brw%3D%3D",
+      "url": "https://www.ebay.com/itm/317858455654?_skw=Tineco+refurbished&hash=item4a01d72066:g:KPgAAeSwTgppiYK0&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGaj1giRXot3Vu6apxaavZDpM7rSRykQ7NDWvQsVYKwceoFRQccPJ5KCJkYl66rgYoB7njd1OujjflnEx0F%2BZS1cA1VweFLLgjSpVLyN81NGDGY4VMfuXHGm%2BEviSCSleh26HslskhILh8uD3GTi1nv05C1odxwBmlpkXJnmTC2sPVqL%2FCgBHxGVAPG6qykJOJf5DOcAiWxFirscQW6oprs9oBoNji%2B56UzB50lU8ArysWoS1O6tAInzOOk4DjsvSn5mdj3YRG%2Fxumv%2BTfgMB4dl2esJ0JRowWKTfOJFRsAsWQ%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/KPgAAeSwTgppiYK0/s-l225.jpg"
     },
     {
@@ -260,7 +260,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318263201765?_skw=Tineco+refurbished&hash=item4a19f70fe5:g:vhYAAeSw6SNp~CDr&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGbYablTiIdlTD7jCv368Ux8UGbFatBBObuFIJvfwAv%2Fe8luSs9nKNNnHWgGycw%2FsThGXrL142BkOfSCvaRgM5Qco8jmjdpDKQe6KlUjNkiEEXBhB8MOEhDHMsHqND6e1na5keGeiYct8HDtfUR%2Fo%2FLoLSLsRZujzbizkvw42H6Figi8RBuZCgtbILizW%2Fcp%2BhdcuVnFsGvz8d36Hqjd0s2%2BKsUdJDqmay6ML4L2wwYTsBQ%2FD6lkgQAJXoIF4d2sydYd7RHjCqOmCdNNgW24o540F%2FdC0DQR9F7ycSrJVgUyNQ%3D%3D",
+      "url": "https://www.ebay.com/itm/318263201765?_skw=Tineco+refurbished&hash=item4a19f70fe5:g:vhYAAeSw6SNp~CDr&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGbYablTiIdlTD7jCv368Ux8UGbFatBBObuFIJvfwAv%2Fe8luSs9nKNNnHWgGycw%2FsThGXrL142BkOfSCvaRgM5Qco8jmjdpDKQe6KlUjNkiEEXBhB8MOEhDHMsHqND6e1nZHdqqybuB3XaLiOfcrZOHT1nKIYEq%2Fus0QuL4b%2BOpsu5uyzl%2BrkyiJ052qzHSt2nnmTTwmJ8063YdT8%2Boq6zJASgrApKwb96bXQhr%2BEYtY9sPI3rXTS9i0zPfaE8zJ4CmdC95ILxQMdaL80JGjjAp5OTMxaaXt%2F6NEgCWm5Zj54g%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/vhYAAeSw6SNp~CDr/s-l225.jpg"
     },
     {
@@ -276,7 +276,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/317858358252?_skw=Tineco+refurbished&hash=item4a01d5a3ec:g:DSoAAeSwRytpiXd5&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGZcI86vqrxdO92sI8AAMw9mXRvza1BGCa6cwHNgo%2Be6c0NlDkuQlSI18l7aWKi2x6uhbAaysRQhYXAYJnnmxIQfMt25Doi2dqjmEhQcZXGZ6r325i4UiszTgQYJAcXNZK7%2B%2B7tBjF%2BifsTYbiu2sw3bEo6it28drv%2B6T3aTUsJbiLvQJYIpXNImwmK3fijVyskVt1%2F80vGdqeBcvvIbxGkaywJZ3rY0JQ1CUqmyMMLZkJyVxBnJHOWvx839wi6GJdYA0TiVJgG9GvO6N7yokr0%2BIBW5IOIo5igVvKq9MmbfHA%3D%3D",
+      "url": "https://www.ebay.com/itm/317858358252?_skw=Tineco+refurbished&hash=item4a01d5a3ec:g:DSoAAeSwRytpiXd5&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGZcI86vqrxdO92sI8AAMw9mXRvza1BGCa6cwHNgo%2Be6c0NlDkuQlSI18l7aWKi2x6uhbAaysRQhYXAYJnnmxIQfMt25Doi2dqjmEhQcZXGZ6r325i4UiszTgQYJAcXNZK6rp0zahMPn886tgPYKg6blaWSv78YdI7NkwO0bsyz872Kg332A3urnkUJLAILK76ORgKgUnDLTvBhFc%2BroiEtu31LqZgpL62TZx7dzBfDT9ap95d%2B9ck6E7jXUYad7wUgC3WjV8IVJa3GDNWRPlJCBAvDYG%2F58a1pIn6paUjsp7Q%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/DSoAAeSwRytpiXd5/s-l225.jpg"
     },
     {
@@ -292,7 +292,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318562189763?_skw=Tineco+refurbished&hash=item4a2bc941c3:g:K0AAAeSwIwJqOP8T&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGY%2FgOkSmFos%2BIewH5lLKkOVKyaSkeozTlwXUIBJTtDDaR0bZFwfaU5rMHqLMgu0aRhjbI0wbr49S5MZ9xkE5YSaRYvQqcDAZb1yDfma6X%2BUdRK4cPObmWRtEaWwgeJFYOeSwrhAKB50HaoDowXNb%2BSWVM%2FtJkXLnqfdkzAY1A2jY0A6mqhmfwOUySEL3Qb96T8ltlH2RJY%2FQhPkyTnbWlb0nzv0yJFAZddDoQMBoq5xYkxpMcIVImDD3sxc%2FU2LkCaT2i0VuC1Rl8A1FJE1t911wodblv%2F6Kg9%2ButQOq9QPAQ%3D%3D",
+      "url": "https://www.ebay.com/itm/318562189763?_skw=Tineco+refurbished&hash=item4a2bc941c3:g:K0AAAeSwIwJqOP8T&amdata=enc%3AAQALAAAA8ACCtXRWQnOEpyOqnQQ8KGY%2FgOkSmFos%2BIewH5lLKkOVKyaSkeozTlwXUIBJTtDDaR0bZFwfaU5rMHqLMgu0aRhjbI0wbr49S5MZ9xkE5YSaRYvQqcDAZb1yDfma6X%2BUdRK4cPObmWRtEaWwgeJFYOesEgJrAwL%2BHHSSpWnDeaQ7Kan6Q%2BHwSuStc4nL7jmmtxj28vXoPxU0ByvtX1FHe04l%2FGoALQSUF%2FHzV1SxgJgrCnJVczRxSVATOc4EPcbCMlARmwhBfcO%2FH0IJFJkG9iTMsDZolOhonxkKMfimdTUsdKcCUXUyjO0Np6uUvsmwOg%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/K0AAAeSwIwJqOP8T/s-l225.jpg"
     },
     {
