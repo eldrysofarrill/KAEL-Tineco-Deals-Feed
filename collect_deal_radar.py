@@ -1,7 +1,9 @@
 import json
+import re
 import statistics
 import urllib.parse
 import urllib.request
+from collections import defaultdict
 from datetime import datetime, timezone
 
 from collect_deals import get_token, SEARCH_URL, MARKETPLACE
@@ -17,8 +19,19 @@ QUERIES = [
 ]
 
 MAX_PER_QUERY = 30
+MAX_COMPARABLE_QUERY = 24
 MAX_OUTPUT = 70
-SCORING_VERSION = "2.0"
+MAX_COMPARABLE_GROUPS = 48
+SCORING_VERSION = "3.0"
+
+KNOWN_BRANDS = (
+    "SAMSUNG", "APPLE", "DEWALT", "NINTENDO", "KITCHENAID", "NINJA", "TINECO",
+)
+
+NOISE_MODEL_TOKENS = {
+    "5G", "4G", "20V", "18V", "12V", "120V", "110V", "240V",
+    "2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019",
+}
 
 
 def money_value(obj):
@@ -30,10 +43,10 @@ def money_value(obj):
         return 0.0
 
 
-def fetch_query(token, query):
+def fetch_query(token, query, limit=MAX_PER_QUERY):
     params = {
         "q": query,
-        "limit": str(MAX_PER_QUERY),
+        "limit": str(limit),
         "filter": "buyingOptions:{FIXED_PRICE}",
     }
     url = SEARCH_URL + "?" + urllib.parse.urlencode(params)
@@ -47,6 +60,183 @@ def fetch_query(token, query):
     )
     with urllib.request.urlopen(req, timeout=30) as r:
         return json.load(r).get("itemSummaries", [])
+
+
+def normalize_text(value):
+    value = (value or "").upper().replace("™", " ").replace("®", " ")
+    value = re.sub(r"[^A-Z0-9.+-]+", " ", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def detect_brand(title):
+    t = normalize_text(title)
+    for brand in KNOWN_BRANDS:
+        if re.search(rf"\b{re.escape(brand)}\b", t):
+            return brand.title() if brand != "DEWALT" else "DEWALT"
+    return ""
+
+
+def storage_variant(title):
+    t = normalize_text(title)
+    tb = re.search(r"\b(1|2)\s*TB\b", t)
+    if tb:
+        return f"{tb.group(1)}TB"
+    gb = re.search(r"\b(16|32|64|128|256|512)\s*GB\b", t)
+    return f"{gb.group(1)}GB" if gb else ""
+
+
+def condition_family(condition):
+    c = (condition or "").lower()
+    if "refurb" in c or "renewed" in c:
+        return "REFURB"
+    if "new" in c and "other" not in c:
+        return "NEW"
+    if any(x in c for x in ("used", "pre-owned", "preowned", "good", "excellent", "very good")):
+        return "USED"
+    return "OTHER"
+
+
+def extract_model_identity(title, brand):
+    t = normalize_text(title)
+
+    if brand.upper() == "SAMSUNG":
+        m = re.search(r"\bGALAXY\s+(S\d{1,2}(?:E|FE|ULTRA|PLUS|\+)?|A\d{1,2}|NOTE\s*\d{1,2}|Z\s*(?:FLIP|FOLD)\s*\d{0,2})\b", t)
+        if m:
+            model = re.sub(r"\s+", "", m.group(1)).replace("+", "PLUS")
+            return model, "EXACT"
+        m = re.search(r"\bSM[- ]?([A-Z0-9]{4,})\b", t)
+        if m:
+            return "SM-" + m.group(1), "EXACT"
+        m = re.search(r"\b([SGA]\d{3,4}[A-Z]{0,2})\b", t)
+        if m:
+            return m.group(1), "MEDIUM"
+
+    if brand.upper() == "APPLE":
+        model_code = re.search(r"\bA\d{4}\b", t)
+        if model_code:
+            return model_code.group(0), "EXACT"
+        gen = re.search(r"\bIPAD\b.*?\b(\d{1,2})(?:ST|ND|RD|TH)?\s*(?:GEN|GENERATION)\b", t)
+        if gen:
+            family = "IPAD"
+            if "PRO" in t:
+                family = "IPAD-PRO"
+            elif "AIR" in t:
+                family = "IPAD-AIR"
+            elif "MINI" in t:
+                family = "IPAD-MINI"
+            return f"{family}-{gen.group(1)}GEN", "EXACT"
+        year = re.search(r"\bIPAD\b.*?\b(201[5-9]|202[0-6])\b", t)
+        if year:
+            family = "IPAD"
+            if "PRO" in t:
+                family = "IPAD-PRO"
+            elif "AIR" in t:
+                family = "IPAD-AIR"
+            elif "MINI" in t:
+                family = "IPAD-MINI"
+            return f"{family}-{year.group(1)}", "MEDIUM"
+
+    if brand.upper() == "DEWALT":
+        m = re.search(r"\b(D(?:CF|CD|CS|CK|CL|CH|CM|CV|CP|CB|CC|CR)\d{3,4}[A-Z0-9-]*)\b", t)
+        if m:
+            return m.group(1), "EXACT"
+
+    if brand.upper() == "NINTENDO":
+        if re.search(r"\bSWITCH\s+OLED\b", t):
+            return "SWITCH-OLED", "EXACT"
+        if re.search(r"\bSWITCH\s+LITE\b", t):
+            return "SWITCH-LITE", "EXACT"
+        if re.search(r"\bNINTENDO\s+SWITCH\b", t):
+            return "SWITCH", "MEDIUM"
+
+    if brand.upper() == "KITCHENAID":
+        m = re.search(r"\b(KSM\d{2,4}[A-Z0-9-]*)\b", t)
+        if m:
+            return m.group(1), "EXACT"
+
+    if brand.upper() == "NINJA":
+        m = re.search(r"\b((?:AF|DZ|SP|OL|FD|OP|AG|DG|DT|SL|SF|CR|MC|BN)\d{2,4}[A-Z0-9-]*)\b", t)
+        if m:
+            return m.group(1), "EXACT"
+
+    if brand.upper() == "TINECO":
+        patterns = [
+            r"\b(FLOOR\s+ONE\s+S\d+[A-Z0-9-]*)\b",
+            r"\b(PURE\s+ONE\s+S\d+[A-Z0-9-]*)\b",
+            r"\b(IFLOOR\s*\d*[A-Z0-9-]*)\b",
+            r"\b(STRETCH\s+S\d+[A-Z0-9-]*)\b",
+            r"\b(S\d+[A-Z0-9-]*)\b",
+        ]
+        for pattern in patterns:
+            m = re.search(pattern, t)
+            if m:
+                return re.sub(r"\s+", "-", m.group(1)), "EXACT"
+
+    generic = re.findall(r"\b[A-Z]{1,5}[-]?[A-Z0-9]*\d[A-Z0-9-]{2,}\b", t)
+    for token in generic:
+        token = token.strip("-")
+        if token in NOISE_MODEL_TOKENS:
+            continue
+        if token.endswith("GB") or token.endswith("TB") or token.endswith("HZ"):
+            continue
+        if re.fullmatch(r"20\d{2}", token):
+            continue
+        return token, "MEDIUM"
+
+    return "", "NONE"
+
+
+def build_identity(title, condition, category):
+    brand = detect_brand(title)
+    model, quality = extract_model_identity(title, brand)
+    storage = storage_variant(title) if category == "ELECTRONICS" else ""
+    cond = condition_family(condition)
+
+    if not brand or not model:
+        quality = "NONE"
+
+    key_parts = [brand.upper(), model.upper()]
+    if storage:
+        key_parts.append(storage.upper())
+    key_parts.append(cond)
+    key = "|".join(x for x in key_parts if x) if quality != "NONE" else ""
+
+    query_parts = [brand, model]
+    if storage:
+        query_parts.append(storage)
+    if cond == "REFURB":
+        query_parts.append("refurbished")
+    elif cond == "NEW":
+        query_parts.append("new")
+    elif cond == "USED":
+        query_parts.append("used")
+    query = " ".join(x for x in query_parts if x).strip()
+
+    return {
+        "brand": brand,
+        "model": model,
+        "variant": storage,
+        "conditionFamily": cond,
+        "comparableKey": key,
+        "comparisonQuery": query,
+        "matchQuality": quality,
+    }
+
+
+def identity_matches(target, candidate):
+    if target["matchQuality"] == "NONE" or candidate["matchQuality"] == "NONE":
+        return False
+    if target["brand"].upper() != candidate["brand"].upper():
+        return False
+    if target["model"].upper() != candidate["model"].upper():
+        return False
+    if target["conditionFamily"] != candidate["conditionFamily"]:
+        return False
+    target_variant = target.get("variant") or ""
+    candidate_variant = candidate.get("variant") or ""
+    if target_variant and candidate_variant != target_variant:
+        return False
+    return True
 
 
 def normalize_discount(price, original, api_discount):
@@ -132,15 +322,15 @@ def trimmed_median(values):
 
 
 def market_savings(landed, market_median):
-    if landed <= 0 or market_median <= 0 or landed >= market_median:
+    if landed <= 0 or market_median <= 0:
         return 0.0
     return round((market_median - landed) * 100.0 / market_median, 1)
 
 
-def confidence_for(count):
-    if count >= 10:
+def confidence_for(count, quality):
+    if quality == "EXACT" and count >= 8:
         return "HIGH"
-    if count >= 5:
+    if quality in ("EXACT", "MEDIUM") and count >= 4:
         return "MEDIUM"
     return "LOW"
 
@@ -148,36 +338,42 @@ def confidence_for(count):
 def classify(deal, comparable_count, market_median):
     landed = round(deal["currentPrice"] + deal["shippingCost"], 2)
     savings = market_savings(landed, market_median)
-    market_component = market_points(savings)
+    quality = deal.get("matchQuality", "NONE")
+    confidence = confidence_for(comparable_count, quality)
+
+    market_component = market_points(savings) if comparable_count >= 4 and quality != "NONE" else 0
     seller_component = seller_points(deal["sellerRating"])
     shipping_component = shipping_points(deal["shippingCost"])
     condition_component = condition_points(deal["condition"])
 
     promo_component = 0
-    # Marketing/list-price discount is only a small bonus and NEVER decides the label by itself.
-    if savings >= 5 and deal["discountPercent"] >= 20:
-        promo_component = min(5, int(deal["discountPercent"] // 15) + 1)
+    if market_component > 0 and deal["discountPercent"] >= 20:
+        promo_component = min(4, int(deal["discountPercent"] // 20) + 1)
 
     score = min(100, market_component + seller_component + shipping_component + condition_component + promo_component)
-    confidence = confidence_for(comparable_count)
 
-    # Strong Buy requires a real market-price advantage, a trustworthy seller, and enough comparables.
-    if score >= 78 and savings >= 20 and deal["sellerRating"] >= 97 and comparable_count >= 5:
+    strong_allowed = quality == "EXACT" and comparable_count >= 5
+    good_allowed = quality in ("EXACT", "MEDIUM") and comparable_count >= 4
+
+    if strong_allowed and score >= 78 and savings >= 20 and deal["sellerRating"] >= 97:
         level = "STRONG BUY"
-    elif score >= 58 and savings >= 10 and deal["sellerRating"] >= 95 and comparable_count >= 4:
+    elif good_allowed and score >= 58 and savings >= 10 and deal["sellerRating"] >= 95:
         level = "GOOD DEAL"
     else:
         level = "NORMAL"
 
     reasons = []
-    if savings > 0:
-        reasons.append(f"{savings:.0f}% below comparable median")
+    if market_median > 0 and comparable_count >= 4:
+        if savings >= 0:
+            reasons.append(f"{savings:.0f}% below exact-match median")
+        else:
+            reasons.append(f"{abs(savings):.0f}% above exact-match median")
+        reasons.append(f"{comparable_count} matched listings")
     else:
-        reasons.append("Not below comparable median")
+        reasons.append("Not enough same-model comparables")
     if deal["sellerRating"] > 0:
         reasons.append(f"Seller {deal['sellerRating']:.1f}% positive")
     reasons.append("Free shipping" if deal["shippingCost"] <= 0 else f"Shipping ${deal['shippingCost']:.2f}")
-    reasons.append(f"{comparable_count} comparable listings")
 
     return {
         "dealScore": score,
@@ -198,7 +394,7 @@ def classify(deal, comparable_count, market_median):
     }
 
 
-def simplify_base(item, category, query):
+def simplify_base(item, category, seed_query):
     title = (item.get("title") or "").strip()
     price = money_value(item.get("price"))
     marketing = item.get("marketingPrice") or {}
@@ -210,16 +406,22 @@ def simplify_base(item, category, query):
     except Exception:
         feedback = 0.0
     ship = shipping_cost(item)
+    identity = build_identity(title, item.get("condition") or "", category)
 
     return {
         "id": item.get("itemId") or "",
         "source": "eBay",
         "sourceItemId": item.get("itemId") or "",
         "title": title,
-        "brand": "",
-        "model": "",
+        "brand": identity["brand"],
+        "model": identity["model"],
+        "variant": identity["variant"],
         "category": category,
-        "comparisonQuery": query,
+        "seedQuery": seed_query,
+        "comparisonQuery": identity["comparisonQuery"],
+        "comparableKey": identity["comparableKey"],
+        "matchQuality": identity["matchQuality"],
+        "conditionFamily": identity["conditionFamily"],
         "condition": item.get("condition") or "",
         "seller": seller.get("username") or "",
         "sellerRating": feedback,
@@ -232,6 +434,60 @@ def simplify_base(item, category, query):
         "discountPercent": discount,
         "currency": (item.get("price") or {}).get("currency", "USD"),
     }
+
+
+def collect_exact_comparables(token, deal, cache):
+    key = deal.get("comparableKey") or ""
+    query = deal.get("comparisonQuery") or ""
+    if not key or not query or deal.get("matchQuality") == "NONE":
+        return [], 0.0
+    if key in cache:
+        return cache[key]
+
+    try:
+        raw = fetch_query(token, query, MAX_COMPARABLE_QUERY)
+    except Exception:
+        cache[key] = ([], 0.0)
+        return cache[key]
+
+    prices = []
+    seller_counts = defaultdict(int)
+    seen = set()
+    target_identity = {
+        "brand": deal.get("brand", ""),
+        "model": deal.get("model", ""),
+        "variant": deal.get("variant", ""),
+        "conditionFamily": deal.get("conditionFamily", "OTHER"),
+        "matchQuality": deal.get("matchQuality", "NONE"),
+    }
+
+    for item in raw:
+        item_id = item.get("itemId") or ""
+        if not item_id or item_id == deal.get("sourceItemId") or item_id in seen:
+            continue
+        price = money_value(item.get("price"))
+        if price <= 0:
+            continue
+        candidate_identity = build_identity(item.get("title") or "", item.get("condition") or "", deal["category"])
+        if not identity_matches(target_identity, candidate_identity):
+            continue
+        seller = ((item.get("seller") or {}).get("username") or "").lower()
+        if seller and seller_counts[seller] >= 2:
+            continue
+        ship = shipping_cost(item)
+        landed = round(price + ship, 2)
+        if landed <= 0:
+            continue
+        seen.add(item_id)
+        if seller:
+            seller_counts[seller] += 1
+        prices.append(landed)
+        if len(prices) >= 20:
+            break
+
+    result = (prices, trimmed_median(prices))
+    cache[key] = result
+    return result
 
 
 def main():
@@ -247,33 +503,52 @@ def main():
             errors.append({"query": query, "error": str(exc)[:180]})
             continue
 
-        candidates = []
         for item in raw:
             deal = simplify_base(item, category, query)
             if not deal["sourceItemId"] or not deal["title"] or not deal["listingUrl"] or deal["currentPrice"] <= 0:
                 continue
             if not deal["imageUrl"]:
                 continue
-            candidates.append(deal)
-
-        comparable_prices = [round(d["currentPrice"] + d["shippingCost"], 2) for d in candidates if d["currentPrice"] > 0]
-        market_median = trimmed_median(comparable_prices)
-        comparable_count = len(comparable_prices)
-
-        for deal in candidates:
             item_id = deal["sourceItemId"]
             if item_id in seen:
                 continue
-            deal.update(classify(deal, comparable_count, market_median))
-            deal["scoringVersion"] = SCORING_VERSION
-            deal["classificationRule"] = (
-                "STRONG BUY: score >=78, >=20% below comparable median, seller >=97%, 5+ comparables. "
-                "GOOD DEAL: score >=58, >=10% below median, seller >=95%, 4+ comparables."
-            )
             seen.add(item_id)
             deals.append(deal)
 
-    deals.sort(key=lambda x: (-x["dealScore"], -x["marketSavingsPercent"], x["landedPrice"]))
+    comparable_cache = {}
+    scored_groups = 0
+    for deal in deals:
+        market_median = 0.0
+        comparable_count = 0
+        key = deal.get("comparableKey") or ""
+
+        if key and key not in comparable_cache and scored_groups >= MAX_COMPARABLE_GROUPS:
+            comparable_cache[key] = ([], 0.0)
+
+        if key:
+            is_new_group = key not in comparable_cache
+            prices, market_median = collect_exact_comparables(token, deal, comparable_cache)
+            if is_new_group:
+                scored_groups += 1
+            comparable_count = len(prices)
+
+        deal.update(classify(deal, comparable_count, market_median))
+        deal["scoringVersion"] = SCORING_VERSION
+        deal["comparisonBasis"] = "same brand + model + variant when present + condition family; landed price includes shipping"
+        deal["classificationRule"] = (
+            "STRONG BUY requires exact identity, score >=78, >=20% below same-model landed-price median, "
+            "seller >=97%, and 5+ matched listings. GOOD DEAL requires 4+ matched listings, score >=58, "
+            ">=10% below median, seller >=95%. Insufficient exact comparables stays NORMAL."
+        )
+
+    deals.sort(
+        key=lambda x: (
+            0 if x["dealLevel"] == "STRONG BUY" else 1 if x["dealLevel"] == "GOOD DEAL" else 2,
+            -x["dealScore"],
+            -x["marketSavingsPercent"],
+            x["landedPrice"],
+        )
+    )
     deals = deals[:MAX_OUTPUT]
 
     categories = sorted({d["category"] for d in deals})
@@ -283,9 +558,9 @@ def main():
         "source": "eBay Browse API",
         "marketplace": MARKETPLACE,
         "app": "KAEL Deal Radar",
-        "feedVersion": 2,
+        "feedVersion": 3,
         "scoringVersion": SCORING_VERSION,
-        "scoringMethod": "query-level comparable landed-price median + seller + shipping + condition; list-price discount is only a small bonus",
+        "scoringMethod": "same-product comparable landed-price median + seller + shipping + condition; broad seed-query medians are forbidden",
         "count": len(deals),
         "categories": categories,
         "errors": errors,
