@@ -1,0 +1,50 @@
+name: Update KAEL Deal Radar Feed
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+  push:
+    paths:
+      - 'collect_deal_radar.py'
+      - '.github/workflows/update-deal-radar.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kael-deal-radar-feed
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect multi-category eBay deals
+        env:
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+        run: python collect_deal_radar.py
+      - name: Validate feed
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('deal-radar.json', encoding='utf-8'))
+          assert d['status']=='ok'
+          assert isinstance(d['items'], list)
+          for x in d['items']:
+              for k in ['sourceItemId','title','category','imageUrl','listingUrl','currentPrice','discountPercent','dealLevel']:
+                  assert k in x, (k,x)
+          print('Deal Radar feed OK:', len(d['items']), 'deals')
+          PY
+      - name: Commit refreshed feed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deal-radar.json
+          git commit -m "Refresh KAEL Deal Radar feed [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
