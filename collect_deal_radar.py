@@ -1,5 +1,5 @@
 import json
-import math
+import statistics
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -18,6 +18,7 @@ QUERIES = [
 
 MAX_PER_QUERY = 30
 MAX_OUTPUT = 70
+SCORING_VERSION = "2.0"
 
 
 def money_value(obj):
@@ -60,42 +61,144 @@ def normalize_discount(price, original, api_discount):
     return 0.0
 
 
-def classify(discount, feedback, price):
-    score = 0
-    if discount >= 60:
-        score += 70
-    elif discount >= 50:
-        score += 62
-    elif discount >= 40:
-        score += 52
-    elif discount >= 30:
-        score += 40
-    elif discount >= 20:
-        score += 25
-    else:
-        score += max(0, int(discount))
+def shipping_cost(item):
+    shipping = item.get("shippingOptions") or []
+    if not shipping:
+        return 0.0
+    return money_value((shipping[0] or {}).get("shippingCost"))
 
+
+def condition_points(condition):
+    c = (condition or "").lower()
+    if "new" in c or "certified refurbished" in c:
+        return 10
+    if "excellent" in c or "very good" in c or "refurbished" in c:
+        return 8
+    if "good" in c:
+        return 6
+    if "used" in c:
+        return 3
+    return 5
+
+
+def seller_points(feedback):
+    if feedback >= 99.5:
+        return 20
     if feedback >= 99:
-        score += 20
-    elif feedback >= 97:
-        score += 15
-    elif feedback >= 95:
-        score += 10
+        return 18
+    if feedback >= 98:
+        return 15
+    if feedback >= 97:
+        return 11
+    if feedback >= 95:
+        return 6
+    return 0
 
-    if 20 <= price <= 500:
-        score += 8
 
-    score = min(100, score)
-    if score >= 75 and discount >= 40:
+def shipping_points(cost):
+    if cost <= 0:
+        return 10
+    if cost <= 10:
+        return 7
+    if cost <= 20:
+        return 4
+    return 0
+
+
+def market_points(savings_pct):
+    if savings_pct >= 35:
+        return 55
+    if savings_pct >= 25:
+        return 48
+    if savings_pct >= 18:
+        return 40
+    if savings_pct >= 12:
+        return 32
+    if savings_pct >= 7:
+        return 20
+    if savings_pct >= 3:
+        return 10
+    return 0
+
+
+def trimmed_median(values):
+    values = sorted(v for v in values if v > 0)
+    if not values:
+        return 0.0
+    if len(values) >= 10:
+        trim = max(1, len(values) // 10)
+        values = values[trim:-trim] or values
+    return round(float(statistics.median(values)), 2)
+
+
+def market_savings(landed, market_median):
+    if landed <= 0 or market_median <= 0 or landed >= market_median:
+        return 0.0
+    return round((market_median - landed) * 100.0 / market_median, 1)
+
+
+def confidence_for(count):
+    if count >= 10:
+        return "HIGH"
+    if count >= 5:
+        return "MEDIUM"
+    return "LOW"
+
+
+def classify(deal, comparable_count, market_median):
+    landed = round(deal["currentPrice"] + deal["shippingCost"], 2)
+    savings = market_savings(landed, market_median)
+    market_component = market_points(savings)
+    seller_component = seller_points(deal["sellerRating"])
+    shipping_component = shipping_points(deal["shippingCost"])
+    condition_component = condition_points(deal["condition"])
+
+    promo_component = 0
+    # Marketing/list-price discount is only a small bonus and NEVER decides the label by itself.
+    if savings >= 5 and deal["discountPercent"] >= 20:
+        promo_component = min(5, int(deal["discountPercent"] // 15) + 1)
+
+    score = min(100, market_component + seller_component + shipping_component + condition_component + promo_component)
+    confidence = confidence_for(comparable_count)
+
+    # Strong Buy requires a real market-price advantage, a trustworthy seller, and enough comparables.
+    if score >= 78 and savings >= 20 and deal["sellerRating"] >= 97 and comparable_count >= 5:
         level = "STRONG BUY"
-    elif score >= 50 and discount >= 25:
+    elif score >= 58 and savings >= 10 and deal["sellerRating"] >= 95 and comparable_count >= 4:
         level = "GOOD DEAL"
     else:
         level = "NORMAL"
-    return score, level
+
+    reasons = []
+    if savings > 0:
+        reasons.append(f"{savings:.0f}% below comparable median")
+    else:
+        reasons.append("Not below comparable median")
+    if deal["sellerRating"] > 0:
+        reasons.append(f"Seller {deal['sellerRating']:.1f}% positive")
+    reasons.append("Free shipping" if deal["shippingCost"] <= 0 else f"Shipping ${deal['shippingCost']:.2f}")
+    reasons.append(f"{comparable_count} comparable listings")
+
+    return {
+        "dealScore": score,
+        "dealLevel": level,
+        "landedPrice": landed,
+        "marketMedianPrice": market_median,
+        "marketSavingsPercent": savings,
+        "comparableCount": comparable_count,
+        "dealConfidence": confidence,
+        "scoreReasons": reasons[:4],
+        "scoreBreakdown": {
+            "market": market_component,
+            "seller": seller_component,
+            "shipping": shipping_component,
+            "condition": condition_component,
+            "promo": promo_component,
+        },
+    }
 
 
-def simplify(item, category):
+def simplify_base(item, category, query):
     title = (item.get("title") or "").strip()
     price = money_value(item.get("price"))
     marketing = item.get("marketingPrice") or {}
@@ -106,11 +209,7 @@ def simplify(item, category):
         feedback = float(seller.get("feedbackPercentage") or 0)
     except Exception:
         feedback = 0.0
-    score, level = classify(discount, feedback, price)
-    shipping = item.get("shippingOptions") or []
-    shipping_cost = 0.0
-    if shipping:
-        shipping_cost = money_value((shipping[0] or {}).get("shippingCost"))
+    ship = shipping_cost(item)
 
     return {
         "id": item.get("itemId") or "",
@@ -120,6 +219,7 @@ def simplify(item, category):
         "brand": "",
         "model": "",
         "category": category,
+        "comparisonQuery": query,
         "condition": item.get("condition") or "",
         "seller": seller.get("username") or "",
         "sellerRating": feedback,
@@ -127,12 +227,10 @@ def simplify(item, category):
         "listingUrl": item.get("itemWebUrl") or "",
         "currentPrice": price,
         "originalPrice": original,
-        "shippingCost": shipping_cost,
+        "shippingCost": ship,
         "discountAmount": round(max(0.0, original - price), 2) if original else 0.0,
         "discountPercent": discount,
         "currency": (item.get("price") or {}).get("currency", "USD"),
-        "dealScore": score,
-        "dealLevel": level,
     }
 
 
@@ -148,22 +246,34 @@ def main():
         except Exception as exc:
             errors.append({"query": query, "error": str(exc)[:180]})
             continue
+
+        candidates = []
         for item in raw:
-            deal = simplify(item, category)
-            item_id = deal["sourceItemId"]
-            if not item_id or item_id in seen:
-                continue
-            if not deal["title"] or not deal["listingUrl"] or deal["currentPrice"] <= 0:
+            deal = simplify_base(item, category, query)
+            if not deal["sourceItemId"] or not deal["title"] or not deal["listingUrl"] or deal["currentPrice"] <= 0:
                 continue
             if not deal["imageUrl"]:
                 continue
-            # Keep the radar focused on actual bargains when eBay exposes a comparison price.
-            if deal["discountPercent"] < 15:
+            candidates.append(deal)
+
+        comparable_prices = [round(d["currentPrice"] + d["shippingCost"], 2) for d in candidates if d["currentPrice"] > 0]
+        market_median = trimmed_median(comparable_prices)
+        comparable_count = len(comparable_prices)
+
+        for deal in candidates:
+            item_id = deal["sourceItemId"]
+            if item_id in seen:
                 continue
+            deal.update(classify(deal, comparable_count, market_median))
+            deal["scoringVersion"] = SCORING_VERSION
+            deal["classificationRule"] = (
+                "STRONG BUY: score >=78, >=20% below comparable median, seller >=97%, 5+ comparables. "
+                "GOOD DEAL: score >=58, >=10% below median, seller >=95%, 4+ comparables."
+            )
             seen.add(item_id)
             deals.append(deal)
 
-    deals.sort(key=lambda x: (-x["dealScore"], -x["discountPercent"], x["currentPrice"]))
+    deals.sort(key=lambda x: (-x["dealScore"], -x["marketSavingsPercent"], x["landedPrice"]))
     deals = deals[:MAX_OUTPUT]
 
     categories = sorted({d["category"] for d in deals})
@@ -173,7 +283,9 @@ def main():
         "source": "eBay Browse API",
         "marketplace": MARKETPLACE,
         "app": "KAEL Deal Radar",
-        "feedVersion": 1,
+        "feedVersion": 2,
+        "scoringVersion": SCORING_VERSION,
+        "scoringMethod": "query-level comparable landed-price median + seller + shipping + condition; list-price discount is only a small bonus",
         "count": len(deals),
         "categories": categories,
         "errors": errors,
