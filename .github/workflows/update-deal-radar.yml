@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'collect_deal_radar.py'
+      - 'collect_deal_radar_v31.py'
       - '.github/workflows/update-deal-radar.yml'
 
 permissions:
@@ -27,18 +28,19 @@ jobs:
       - name: Collect multi-category eBay deals
         env:
           EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
-        run: python collect_deal_radar.py
+        run: python collect_deal_radar_v31.py
       - name: Validate feed
         run: |
           python - <<'PY'
           import json
           d=json.load(open('deal-radar.json', encoding='utf-8'))
           assert d['status']=='ok'
+          assert d['scoringVersion'].startswith('3.')
           assert isinstance(d['items'], list)
           for x in d['items']:
-              for k in ['sourceItemId','title','category','imageUrl','listingUrl','currentPrice','discountPercent','dealLevel']:
+              for k in ['sourceItemId','title','category','imageUrl','listingUrl','currentPrice','discountPercent','dealLevel','scoringVersion','matchQuality']:
                   assert k in x, (k,x)
-          print('Deal Radar feed OK:', len(d['items']), 'deals')
+          print('Deal Radar feed OK:', len(d['items']), 'deals', d['scoringVersion'])
           PY
       - name: Commit refreshed feed
         run: |
