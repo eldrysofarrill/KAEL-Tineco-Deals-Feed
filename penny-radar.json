@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "experimental": true,
+  "retailer": "Home Depot",
+  "engineVersion": "1.0-experimental",
+  "updatedAt": "2026-09-02T04:46:18.129621+00:00",
+  "captureComplete": false,
+  "count": 0,
+  "method": "SKU + storeId price history; disappearance after clearance is a candidate signal, never confirmation",
+  "items": []
+}
