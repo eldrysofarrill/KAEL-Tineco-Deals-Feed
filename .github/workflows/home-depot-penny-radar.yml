@@ -1,0 +1,36 @@
+name: Validate Home Depot Penny Radar
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'collect_home_depot_penny.py'
+      - 'test_home_depot_penny.py'
+      - 'home-depot-observations.json'
+      - '.github/workflows/home-depot-penny-radar.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run signal-engine tests
+        run: python -m unittest -v test_home_depot_penny.py
+      - name: Build and validate experimental feed
+        run: |
+          python collect_home_depot_penny.py
+          python - <<'PY'
+          import json
+          d=json.load(open('penny-radar.json', encoding='utf-8'))
+          assert d['status']=='ok'
+          assert d['experimental'] is True
+          assert d['retailer']=='Home Depot'
+          assert isinstance(d['items'], list)
+          print('Home Depot Penny Radar feed OK:', len(d['items']), 'signals')
+          PY
