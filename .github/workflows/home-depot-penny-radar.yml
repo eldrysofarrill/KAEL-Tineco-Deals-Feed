@@ -10,7 +10,7 @@ on:
       - '.github/workflows/home-depot-penny-radar.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -34,3 +34,12 @@ jobs:
           assert isinstance(d['items'], list)
           print('Home Depot Penny Radar feed OK:', len(d['items']), 'signals')
           PY
+      - name: Publish Penny Radar feed and history
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add penny-radar.json home-depot-history.json
+          git commit -m "Refresh Home Depot Penny Radar feed [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
