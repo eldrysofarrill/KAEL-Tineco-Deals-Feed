@@ -3,7 +3,7 @@ name: Update KAEL Deal Radar Feed
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '*/15 * * * *'
   push:
     paths:
       - 'collect_deal_radar.py'
