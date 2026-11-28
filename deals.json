@@ -1,28 +1,12 @@
 {
   "status": "ok",
-  "updatedAt": "2026-11-28T02:38:47.017233+00:00",
+  "updatedAt": "2026-11-28T10:51:32.376557+00:00",
   "source": "eBay Browse API",
   "marketplace": "EBAY_US",
   "seller": "tinecous",
   "query": "Tineco refurbished",
-  "count": 17,
+  "count": 16,
   "items": [
-    {
-      "itemId": "v1|318608628020|0",
-      "title": "Tineco iFLOOR 5 Breeze Complete Wet Dry Vacuum/Floor Washer",
-      "model": "iFLOOR 5",
-      "modelCode": "",
-      "price": 79.0,
-      "currency": "USD",
-      "originalPrice": 139.0,
-      "discountPercent": 43.0,
-      "condition": "Certified - Refurbished",
-      "conditionId": "2000",
-      "seller": "tinecous",
-      "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318608628020?_skw=Tineco+refurbished&hash=item4a2e8dd934:g:MOUAAeSwaQdpeatY",
-      "imageUrl": "https://i.ebayimg.com/images/g/MOUAAeSwaQdpeatY/s-l225.jpg"
-    },
     {
       "itemId": "v1|318263346645|616767687312",
       "title": "Tineco - Floor Washer Pet Cordless Mop & Vacuum Cleaner - 5 Series - Black",
@@ -56,6 +40,22 @@
       "imageUrl": "https://i.ebayimg.com/images/g/MMkAAeSws5hqyKDJ/s-l225.jpg"
     },
     {
+      "itemId": "v1|318813393170|0",
+      "title": "Tineco A30S Cordless Stick Vacuum Cleaner, 160W Suction,  60Min Runtime",
+      "model": "TINECO",
+      "modelCode": "",
+      "price": 89.0,
+      "currency": "USD",
+      "originalPrice": 129.0,
+      "discountPercent": 31.0,
+      "condition": "Certified - Refurbished",
+      "conditionId": "2000",
+      "seller": "tinecous",
+      "sellerFeedbackPercent": "99.6",
+      "url": "https://www.ebay.com/itm/318813393170?_skw=Tineco+refurbished&hash=item4a3ac25112:g:jVEAAeSwvKppy5OA&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7nSKeam1IlVqulyL1lVMtHn%2BwspXjN4Te2%2Bn%2BvM0HY%2Fv2PGM41jWWaZ5eoJqBpHBmzXd8hbJpa45I%2Fr%2FYM43g8QawYW2K1flkYRTvnphhR1JGqsFKKWanvK2aXg7YkZNttccn6PMc2FHY5bINRO45dVPvH39IRIZPYTx%2FbP9ru9tY39UEKTfniqiT8tK56jv%2BJAOC6XGSN%2BkCA%2B5JeYTw9xZmfgw0GkXw705RHMc9YVMM0C1d3nMIBvE%2FxTT0YB3GIBcdr78BDCemi9rW%2B5nX1xSm%2F1M4jxqqRB%2FnoUINBYLA%3D%3D",
+      "imageUrl": "https://i.ebayimg.com/images/g/jVEAAeSwvKppy5OA/s-l225.jpg"
+    },
+    {
       "itemId": "v1|317870929429|0",
       "title": "Tineco Refurbished FLOOR ONE S5 Smart Cordless Wet-Dry Vacuum Cleaner",
       "model": "FLOOR ONE S5",
@@ -84,7 +84,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/317858455654?_skw=Tineco+refurbished&hash=item4a01d72066:g:KPgAAeSwTgppiYK0&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7klTqruqbjP5h%2F2UuIhnlAgkoG6iYdGw7fGmSKQdBA1uLVXFNVphbcSyLx1IFWOLJYN8oG40RLt8gZzyQ%2BCiiFyzS2uV3nay5bhb8MyJKhd6rNiZCyryYCa%2FJovIB2r5%2B8K%2B%2FSgz%2F7hB%2FLcKNljaaYh%2FEHF0DFWJf82Ck0fuUHarJ3pPCqXD97pu1UjDGxJXktg0%2FXIUPwKTyJN5fRfxPfHk9OaCggJWpaQ3MyyY5rfBOLSYbuN%2FsQSjuLGD0uZKAbIjSG0WLCTavbcofw3dYJtny%2B1mHw0wV6qVNr789smwg%3D%3D",
+      "url": "https://www.ebay.com/itm/317858455654?_skw=Tineco+refurbished&hash=item4a01d72066:g:KPgAAeSwTgppiYK0&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7klTqruqbjP5h%2F2UuIhnlAgkoG6iYdGw7fGmSKQdBA1uLVXFNVphbcSyLx1IFWOLJYN8oG40RLt8gZzyQ%2BCiiFyzS2uV3nay5bhb8MyJKhd6rNiZCyryYCa%2FJovIB2r5%2B9mPFQxX%2FMD6S8lysgKPzPgrtRX9AwX3erq9HJeE5jot8GKEYqG%2F0rxgPd4j6zB%2FomR7alx6LCcyWSYsm81UYxw57g87uqA0YHvGPS750o4b1Uk5wLQ723nBq9lKX%2B691xnK4fyFE7D3hDi8CBd6CQaxK7DLaDzbC9AbfVlv2SrOA%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/KPgAAeSwTgppiYK0/s-l225.jpg"
     },
     {
@@ -116,24 +116,24 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318639662344?_skw=Tineco+refurbished&hash=item4a30676508:g:yoIAAeSw3QFqZsVF&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7noeFDRJmdFs%2FdPv4OIIFjWQWMnsigx6S4MPNnRdSszbUcWyqtP6PPf%2FLuv64zUfmfVSV%2BuN09CL8lhK%2FfOBQEwqgJlhUuZf7FPs6N2a6WfZT2o0Y3IbFTn%2BPDV7A%2BXaGM7%2FXKG1aCWP34V6rwbVHWzZodZfCOkkytdnMdiBiCNoKz%2FM4F64RcoOSZuhOfWdpMUqowbIZrgQml4Sq1OsHPqno4yga41oEQDUncX8RawwW6QQLsz9Aho8yjVTdMvMMS4W9nCE%2BDQHkAyp3UEiLEWKhnGcRIir5yQWPjO%2FdGX0g%3D%3D",
+      "url": "https://www.ebay.com/itm/318639662344?_skw=Tineco+refurbished&hash=item4a30676508:g:yoIAAeSw3QFqZsVF",
       "imageUrl": "https://i.ebayimg.com/images/g/yoIAAeSw3QFqZsVF/s-l225.jpg"
     },
     {
-      "itemId": "v1|318813393170|0",
-      "title": "Tineco A30S Cordless Stick Vacuum Cleaner, 160W Suction,  60Min Runtime",
+      "itemId": "v1|318608635457|0",
+      "title": "Tineco Pure ONE S30 Cordless Vacuum Cleaner, 150AW Powerful Suction, Zero Tangle",
       "model": "TINECO",
       "modelCode": "",
       "price": 129.0,
       "currency": "USD",
-      "originalPrice": 0.0,
-      "discountPercent": 0.0,
+      "originalPrice": 159.0,
+      "discountPercent": 19.0,
       "condition": "Certified - Refurbished",
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318813393170?_skw=Tineco+refurbished&hash=item4a3ac25112:g:jVEAAeSwvKppy5OA&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7nSKeam1IlVqulyL1lVMtHn%2BwspXjN4Te2%2Bn%2BvM0HY%2Fv2PGM41jWWaZ5eoJqBpHBmzXd8hbJpa45I%2Fr%2FYM43g8QawYW2K1flkYRTvnphhR1JGqsFKKWanvK2aXg7YkZNtu0IxquQH4po9KTNK8xc67g8C7F%2FQlWPU3Pw4rL47qGQVFoUoHIl0FB8ii7pvwgtM1hrDma16Ax4V4iWhfXk29rGWoCU38gzos2apK3FJFcF2URFgwayCXW5qhXFBOArWAlaau1hbbL36WJh6qkvZahVb4me11sGfasVEqigZSclA%3D%3D",
-      "imageUrl": "https://i.ebayimg.com/images/g/jVEAAeSwvKppy5OA/s-l225.jpg"
+      "url": "https://www.ebay.com/itm/318608635457?_skw=Tineco+refurbished&hash=item4a2e8df641:g:AMIAAeSwa5xp-~sI&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7nbBBc%2FTFym2vu7XJhNJLBEM1aZNDJMKChd9kIfcVXsWYUR09XBXuaUrjYpQ5EF%2Bd5%2BtYdiev%2F7Q1dw1D7huf4YYGh0QXQSYP2RQnYkwKCmQxe7ln8MbMaAvdf2GAZL976oalbHqHKaWovYRIDGajECob3aXWTf54znzchrjlcc3mk7j8LpjHOhazdSvz%2FUvrOxB9sXpkPaxjhv1EiCZJTMclJODkhO53c%2FgMclbEAKuwwXLOJ2%2FuTClTsaLV%2B3ccVlCaKorIuEC1QejTFH12KKZaGgAqEr7IYmnCynLFTo0Q%3D%3D",
+      "imageUrl": "https://i.ebayimg.com/images/g/AMIAAeSwa5xp-~sI/s-l225.jpg"
     },
     {
       "itemId": "v1|860028205302|0",
@@ -152,22 +152,6 @@
       "imageUrl": "https://i.ebayimg.com/images/g/lfEAAeSwqJZqyaqq/s-l225.jpg"
     },
     {
-      "itemId": "v1|318608635457|0",
-      "title": "Tineco Pure ONE S30 Cordless Vacuum Cleaner, 150AW Powerful Suction, Zero Tangle",
-      "model": "TINECO",
-      "modelCode": "",
-      "price": 159.0,
-      "currency": "USD",
-      "originalPrice": 0.0,
-      "discountPercent": 0.0,
-      "condition": "Certified - Refurbished",
-      "conditionId": "2000",
-      "seller": "tinecous",
-      "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/318608635457?_skw=Tineco+refurbished&hash=item4a2e8df641:g:AMIAAeSwa5xp-~sI&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7nbBBc%2FTFym2vu7XJhNJLBEM1aZNDJMKChd9kIfcVXsWYUR09XBXuaUrjYpQ5EF%2Bd5%2BtYdiev%2F7Q1dw1D7huf4YYGh0QXQSYP2RQnYkwKCmQxe7ln8MbMaAvdf2GAZL974qFRxFDOBB%2FI3ZDmNTqoS5kVofklX8CxabKjENnjoK%2FLQacyx0UlQM%2B%2BN4yPi0p4qIkKx%2F7I352L2znPwajlznHB0mnPK2FyVV9t2bK0L6i8thJlsZVsbXKqaNvf6YZNujC%2BVwpHpf2sUN9fThwe4C6lYEQD%2B8wTk6rQbYR%2B9csQ%3D%3D",
-      "imageUrl": "https://i.ebayimg.com/images/g/AMIAAeSwa5xp-~sI/s-l225.jpg"
-    },
-    {
       "itemId": "v1|317858358252|0",
       "title": "Tineco Floor ONE STRETCH S6 Wet Dry Vacuum Cleaner, 180°Lay-flat",
       "model": "FLOOR ONE STRETCH S6",
@@ -184,6 +168,22 @@
       "imageUrl": "https://i.ebayimg.com/images/g/DSoAAeSwRytpiXd5/s-l225.jpg"
     },
     {
+      "itemId": "v1|860025347341|0",
+      "title": "TINECO FLOOR ONE SWITCH S7 Smart Multi-Function Cleaner, ZeroTangle Brush",
+      "model": "FLOOR ONE S7",
+      "modelCode": "",
+      "price": 197.76,
+      "currency": "USD",
+      "originalPrice": 309.0,
+      "discountPercent": 36.0,
+      "condition": "Certified - Refurbished",
+      "conditionId": "2000",
+      "seller": "tinecous",
+      "sellerFeedbackPercent": "99.6",
+      "url": "https://www.ebay.com/itm/860025347341?_skw=Tineco+refurbished&hash=itemc83d815d0d:i:860025347341",
+      "imageUrl": ""
+    },
+    {
       "itemId": "v1|860178719758|0",
       "title": "Tineco Floor ONE Switch S6 Stretch Wet Dry Vacuum Cleaner",
       "model": "FLOOR ONE S6",
@@ -196,7 +196,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/860178719758?_skw=Tineco+refurbished&hash=itemc846a5a40e:g:WpwAAeSw9mxrCALq&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7k80zs6%2FEWYOUs8CZpZYuKgxljapO0IQgvR9Bhr%2BcR43MWnmD6m6JvgcL9ROYI4Tm78s9V%2FtOtPXPEPdOvGONuQIe80LLw0fjx9Elk%2B%2FBTxEIewfA6vpUr0RcLugIyrOB5rs8aJDiYYW3ObKyG9wHrz5z9y%2BrQTjmOY2IC1LIDHPO7fM6znJIgm%2BNDHm6WGmO4R3KNOA0bt8MxJDuZSoFtEy4ZjQL%2F0uhYEs7pcUzEHYl9%2BeIsniWEXWgbi%2FkXy%2B4sRWEpvzIJMzU5pHeFieWEf0mYQk4y4N69fZzGBdxGZGg%3D%3D",
+      "url": "https://www.ebay.com/itm/860178719758?_skw=Tineco+refurbished&hash=itemc846a5a40e:g:WpwAAeSw9mxrCALq&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7k80zs6%2FEWYOUs8CZpZYuKgxljapO0IQgvR9Bhr%2BcR43MWnmD6m6JvgcL9ROYI4Tm78s9V%2FtOtPXPEPdOvGONuQIe80LLw0fjx9Elk%2B%2FBTxEIewfA6vpUr0RcLugIyrOB6xGueyCGyiuRdJFqiM0itmPXO8qirLeEh2I3p8IMoMbQ%2FM6nPLIRt%2B%2BKPUTV%2BkyzlAJ8Whkm1VqjO68h1xdJeGpOyghjkYToUCksdyAceXl60ldQktWi4%2B9aCm48hbUiAyud9NK3ssAnmLtG8D2KdznkwqwDANfloKw%2BUwi7DVmw%3D%3D",
       "imageUrl": "https://i.ebayimg.com/images/g/WpwAAeSw9mxrCALq/s-l225.jpg"
     },
     {
@@ -214,22 +214,6 @@
       "sellerFeedbackPercent": "99.6",
       "url": "https://www.ebay.com/itm/317808260652?_skw=Tineco+refurbished&hash=item49fed9362c:g:RD4AAeSwH-1peH08",
       "imageUrl": "https://i.ebayimg.com/images/g/RD4AAeSwH-1peH08/s-l225.jpg"
-    },
-    {
-      "itemId": "v1|860025347341|0",
-      "title": "TINECO FLOOR ONE SWITCH S7 Smart Multi-Function Cleaner, ZeroTangle Brush",
-      "model": "FLOOR ONE S7",
-      "modelCode": "",
-      "price": 309.0,
-      "currency": "USD",
-      "originalPrice": 0.0,
-      "discountPercent": 0.0,
-      "condition": "Certified - Refurbished",
-      "conditionId": "2000",
-      "seller": "tinecous",
-      "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/860025347341?_skw=Tineco+refurbished&hash=itemc83d815d0d:i:860025347341",
-      "imageUrl": ""
     },
     {
       "itemId": "v1|860148024623|0",
@@ -260,7 +244,7 @@
       "conditionId": "2000",
       "seller": "tinecous",
       "sellerFeedbackPercent": "99.6",
-      "url": "https://www.ebay.com/itm/860147839523?_skw=Tineco+refurbished&hash=itemc844ce7223:i:860147839523&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7mmpAf9xndu18%2FaZo26qFK6aJG5LfPNztxlxk%2FHw828pRXdTGUQRRbgrVXex6pbVUF8Fce0VVK%2Fvz7l9n7rA7EyF%2FhjKHPKEKN1V9ne0frOSbbLj%2B88ObjJSyjzs3qQ1OBGk3Dh73XEm0Z5bhSii9%2FT3%2Bsok9ACv74Fad01qBltkvdhQBLaS3kZVNz0LquqZQoegGvTaztyHsaDzoabDIR8slz3eB6sX%2FcJUYRscCCPJItWT1rzjfU%2FlrOVsyNXTHPoHj0sbtA%2B9Hl%2B5LQH41ffcp8WPv0Yz4BVESWE2GyZIA%3D%3D",
+      "url": "https://www.ebay.com/itm/860147839523?_skw=Tineco+refurbished&hash=itemc844ce7223:i:860147839523&amdata=enc%3AAQALAAAA8Of5zIIojhOf%2BkQK%2Bxzjn7mmpAf9xndu18%2FaZo26qFK6aJG5LfPNztxlxk%2FHw828pRXdTGUQRRbgrVXex6pbVUF8Fce0VVK%2Fvz7l9n7rA7EyF%2FhjKHPKEKN1V9ne0frOSbbLj%2B88ObjJSyjzs3qQ1OApcvocYoY2kUxzUqpaBkBCqHfSKxbFEhsmsgpN8MdUTpqHoacaHqDqpSbFa0e9JgGyswj49iEnZSpJKlxuwHIRt8aHoyIDq1sVnr5YbNIQuaGeJoMn11tWawVopFuUM2aEuwgKh6fgr6kWLLanpzUO1lbEDIHr0E4SyfGX3n7fEQ%3D%3D",
       "imageUrl": ""
     },
     {
